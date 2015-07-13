@@ -71,11 +71,12 @@ public class Activity2 extends AppCompatActivity {
 
                 //String sleepTime = time.getText().toString();
                 //runner.execute(sleepTime);
+                MyDownloadTask downloadtask = new MyDownloadTask();
                 new MyDownloadTask().execute();
 
                 //MyDownloadTask runner = new MyDownloadTask();
 
-                jObject = new MyDownloadTask().doInBackground();
+                //jObject = new MyDownloadTask().doInBackground();
 
                 //Log.e("HMmmmmmMM",runner);
             }
@@ -85,10 +86,9 @@ public class Activity2 extends AppCompatActivity {
 
     public class MyDownloadTask extends AsyncTask<Void, Void, String>
     {
-        private String resp;
-        ImageButton imgButton;
-        private TextView first_textbox;
-        private TextView second_textbox;
+
+        TextView output = (TextView)findViewById(R.id.textView2);
+        //output.setText("Something must have happened here");
 
         protected void onPreExecute() {
             //display progress dialog.
@@ -98,6 +98,7 @@ public class Activity2 extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
+
 
             //URL url;
             //HttpURLConnection urlConnection = null;
@@ -140,7 +141,7 @@ public class Activity2 extends AppCompatActivity {
                 forecastJsonStr = buffer.toString();
 
 
-                String message = reader.toString();
+
                 Log.e("HELOOOOOOOO httptest",forecastJsonStr);
 
                 urlConnection.disconnect();
@@ -155,6 +156,20 @@ public class Activity2 extends AppCompatActivity {
             }
 
 
+            runOnUiThread(new Thread() {
+
+                //final String forecastJsonStr = forecastJsonStr;
+
+                public void run() {
+
+                    TextView output = (TextView) findViewById(R.id.textView2);
+                    //final String message = forecastJsonStr;
+                    output.setText("async thread text! yay");
+                }
+            });
+
+
+
             return forecastJsonStr;
         }
 
@@ -163,6 +178,9 @@ public class Activity2 extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             // dismiss progress dialog and update ui
         }
+
+
+
     }
 
     @Override
