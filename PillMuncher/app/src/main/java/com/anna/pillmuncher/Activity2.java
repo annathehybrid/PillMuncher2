@@ -2,6 +2,7 @@ package com.anna.pillmuncher;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -84,10 +85,9 @@ public class Activity2 extends AppCompatActivity {
 
     }
 
-    public class MyDownloadTask extends AsyncTask<Void, Void, String>
-    {
-
-        TextView output = (TextView)findViewById(R.id.textView2);
+    public class MyDownloadTask extends AsyncTask<String, Void, String> {
+        public String returnstring = null;
+        TextView output = (TextView) findViewById(R.id.textView2);
         //output.setText("Something must have happened here");
 
         protected void onPreExecute() {
@@ -95,35 +95,46 @@ public class Activity2 extends AppCompatActivity {
 
         }
 
+        String parameter = "rxcui.json";
+        String units = "NDC";
+        String units2 = "11523-7020-1";
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected String doInBackground(String... args) {
 
 
             //URL url;
-            //HttpURLConnection urlConnection = null;
+            HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             String forecastJsonStr = null;
+
 
             try {
                 // Construct the URL
                 final String RXNORM_BASE_URL = "http://rxnav.nlm.nih.gov/REST/";
-                URL url = new URL("http://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=11523-7020-1");
+                //URL url = new URL("http://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=11523-7020-1");
 
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                //final String QUERY_PARAM = "mouse";
+                final String UNITS_PARAM = "idtype";
+                final String UNITS_PARAM2 = "id";
 
-                //urlConnection.setAllowUserInteraction(false);
+                Uri builtUri = Uri.parse(RXNORM_BASE_URL).buildUpon()
+                        .appendPath(parameter)
+                        .appendQueryParameter(UNITS_PARAM, units) //adds a ?PARAM=units and fragment adds a #
+                        .appendQueryParameter(UNITS_PARAM2, units2)
+                        .build();
+
+                URL url = new URL(builtUri.toString());
+
+                //HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
 
+                // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
-
-
                 StringBuffer buffer = new StringBuffer();
-                if (inputStream == null) {
-                    // Nothing to do.
-                    return null;
-                }
+
                 reader = new BufferedReader(new InputStreamReader(inputStream));
 
                 String line;
@@ -133,25 +144,20 @@ public class Activity2 extends AppCompatActivity {
                     // buffer for debugging.
                     buffer.append(line + "\n");
                 }
-                if (buffer.length() == 0) {
-                    // Stream was empty.  No point in parsing.
-                    return null;
-                }
+
 
                 forecastJsonStr = buffer.toString();
+                returnstring = forecastJsonStr;
 
-
-
-                Log.e("HELOOOOOOOO httptest",forecastJsonStr);
+                String returnthis = url.toString();
+                Log.e("ANNA, LOOK AT THIS URL", forecastJsonStr);
 
                 urlConnection.disconnect();
 
 
-            }
-            catch (MalformedURLException ex) {
-                Log.e("httptest",Log.getStackTraceString(ex));
-            }
-            catch (IOException ex2) {
+            } catch (MalformedURLException ex) {
+                Log.e("httptest", Log.getStackTraceString(ex));
+            } catch (IOException ex2) {
                 Log.e("httptest", "Error ", ex2);
             }
 
@@ -159,26 +165,24 @@ public class Activity2 extends AppCompatActivity {
             runOnUiThread(new Thread() {
 
                 //final String forecastJsonStr = forecastJsonStr;
-
                 public void run() {
+
 
                     TextView output = (TextView) findViewById(R.id.textView2);
                     //final String message = forecastJsonStr;
-                    output.setText("async thread text! yay");
+                    output.setText(returnstring);
                 }
             });
-
 
 
             return forecastJsonStr;
         }
 
 
-
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(String result) {
+            result = returnstring;
             // dismiss progress dialog and update ui
         }
-
 
 
     }

@@ -218,9 +218,6 @@ public class ForecastFragment extends Fragment {
                     getString(R.string.pref_units_metric));
 
 
-
-
-
             for(int i = 0; i < weatherArray.length(); i++) {
                 // For now, using the format "Day, description, hi/low"
                 String day;
@@ -270,7 +267,6 @@ public class ForecastFragment extends Fragment {
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
-
             BufferedReader reader = null;
 
 
@@ -281,7 +277,6 @@ public class ForecastFragment extends Fragment {
             String units = "metric";
             int numDays = 7;
 
-
             Log.v(LOG_TAG, "Forecast string: " + forecastJsonStr);
 
             try {
@@ -290,8 +285,10 @@ public class ForecastFragment extends Fragment {
                 // http://openweathermap.org/API#forecast
                 final String FORECAST_BASE_URL =
                         "http://api.openweathermap.org/data/2.5/forecast/daily?";
-                final String RXNORM_BASE_URL =
-                        "http://rxnav.nlm.nih.gov/REST/";
+
+                //http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7
+                //http://api.openweathermap.org/data/2.5/forecast/daily?
+                //final String RXNORM_BASE_URL = "http://rxnav.nlm.nih.gov/REST/";
                 final String QUERY_PARAM = "q";
                 final String FORMAT_PARAM = "mode";
                 final String UNITS_PARAM = "units";
