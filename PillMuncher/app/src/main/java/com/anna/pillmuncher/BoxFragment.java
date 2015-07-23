@@ -45,6 +45,9 @@ import java.util.List;
 
 public class BoxFragment extends Fragment {
 
+    public ArrayAdapter<String> mForecastAdapter;
+
+
     public BoxFragment() {
     }
 
@@ -52,7 +55,7 @@ public class BoxFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //setHasOptionsMenu(true);
     }
 
 
@@ -85,7 +88,7 @@ public class BoxFragment extends Fragment {
     }
 
 
-    public ArrayAdapter<String> mForecastAdapter;
+
 
     TextView TextBox1;
     TextView TextBox2;
@@ -113,6 +116,10 @@ public class BoxFragment extends Fragment {
         };
 
 
+        //List<String> pill_data = new ArrayList<String>(Arrays.asList(pill_data));
+
+
+
         List<String> weekPills = new ArrayList<String>(Arrays.asList(pill_data));
 
 
@@ -125,9 +132,14 @@ public class BoxFragment extends Fragment {
 
         ListView listView = (ListView) view.findViewById(R.id.listview_pillbox);
 
-        //Box.MyDownloadTask frame = Box.MyDownloadTask.result;
+        //Box.MyDownloadTask frame = ;
+
+        mForecastAdapter.add("hi hi");
+        //mForecastAdapter.add(Box.MyDownloadTask.result);
 
         listView.setAdapter(mForecastAdapter);
+
+
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -155,5 +167,5 @@ public class BoxFragment extends Fragment {
 
 
 
-
 }
+

@@ -171,6 +171,9 @@ public class Box extends AppCompatActivity {
                 Log.e("this is the result", result);
             }
 
+
+
+            //BoxFragment.mForecastAdapter;
             String send_to_adapter = result;
             //.clear();
 
