@@ -43,6 +43,7 @@ public class ForecastFragment extends Fragment {
     public ForecastFragment() {
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +53,7 @@ public class ForecastFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
+        //inflater.inflate(R.menu.menu_main, menu);
     }
 
     @Override
@@ -65,8 +66,6 @@ public class ForecastFragment extends Fragment {
             FetchWeatherTask weatherTask = new FetchWeatherTask();
             //weatherTask.execute("77030");
             updateWeather();
-
-
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -135,6 +134,8 @@ public class ForecastFragment extends Fragment {
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
+
+
 
         /* The date/time conversion code is going to be moved outside the asynctask later,
          * so for convenience we're breaking it out into its own method now.

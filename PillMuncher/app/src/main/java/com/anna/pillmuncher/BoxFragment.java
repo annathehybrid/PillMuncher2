@@ -55,6 +55,7 @@ public class BoxFragment extends Fragment {
 
     }
 
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
@@ -84,10 +85,10 @@ public class BoxFragment extends Fragment {
     }
 
 
-    private ArrayAdapter<String> mForecastAdapter;
+    public ArrayAdapter<String> mForecastAdapter;
 
-    TextView cityField;
-    TextView updatedField;
+    TextView TextBox1;
+    TextView TextBox2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,8 +98,8 @@ public class BoxFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_main_box, container, false);
 
-        cityField = (TextView) view.findViewById(R.id.city_field);
-        updatedField = (TextView) view.findViewById(R.id.updated_field);
+        TextBox1 = (TextView) view.findViewById(R.id.textbox_1);
+        TextBox2 = (TextView) view.findViewById(R.id.textbox_2);
 
 
         // Create some dummy data for the ListView.  Here's a sample pillbox
@@ -123,6 +124,9 @@ public class BoxFragment extends Fragment {
         //new ArrayList<String>());
 
         ListView listView = (ListView) view.findViewById(R.id.listview_pillbox);
+
+        //Box.MyDownloadTask frame = Box.MyDownloadTask.result;
+
         listView.setAdapter(mForecastAdapter);
 
 
@@ -149,8 +153,7 @@ public class BoxFragment extends Fragment {
     }
 
 
+
+
+
 }
-
-
-
-

@@ -7,11 +7,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,16 +26,18 @@ import java.net.URL ;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class Activity2 extends AppCompatActivity {
 
+
     ImageButton imgButton;
-    private TextView first_textbox;
-    private TextView second_textbox;
-
-
-    //HttpURLConnection conn = (HttpURLConnection) u.openConnection();
+    public TextView first_textbox;
+    public TextView second_textbox;
+    public ArrayAdapter<String> Pill_Adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +48,8 @@ public class Activity2 extends AppCompatActivity {
         imgButton =(ImageButton)findViewById(R.id.imageButton1);
         first_textbox = (TextView) findViewById(R.id.textbox);
         second_textbox = (TextView) findViewById(R.id.textView2);
+
+
 
         // Get the message from the intent
         Intent intent = getIntent();
@@ -61,8 +69,8 @@ public class Activity2 extends AppCompatActivity {
 
         // Set the text view as the activity layout
         GridLayout.LayoutParams layout = new GridLayout.LayoutParams();
+        //addContentView(textView, layout);
         addContentView(textView, layout);
-
 
 
         final String jObject = null;
@@ -70,20 +78,14 @@ public class Activity2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //String sleepTime = time.getText().toString();
-                //runner.execute(sleepTime);
                 MyDownloadTask downloadtask = new MyDownloadTask();
-                new MyDownloadTask().execute();
+                new MyDownloadTask().execute("input_here");
 
-                //MyDownloadTask runner = new MyDownloadTask();
-
-                //jObject = new MyDownloadTask().doInBackground();
-
-                //Log.e("HMmmmmmMM",runner);
             }
         });
-
     }
+
+
 
     public class MyDownloadTask extends AsyncTask<String, Void, String> {
         public String returnstring = null;
@@ -107,6 +109,9 @@ public class Activity2 extends AppCompatActivity {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             String forecastJsonStr = null;
+
+            String args_print = args[0];
+            Log.e("This is the input: ", args_print);
 
 
             try {
@@ -174,13 +179,18 @@ public class Activity2 extends AppCompatActivity {
                 }
             });
 
-
+            //return getWeatherDataFromJson(forecastJsonStr);
             return forecastJsonStr;
         }
 
 
         protected void onPostExecute(String result) {
             result = returnstring;
+
+            if (result != null) {
+                Log.e("this is the result", result);
+
+                }
             // dismiss progress dialog and update ui
         }
 
