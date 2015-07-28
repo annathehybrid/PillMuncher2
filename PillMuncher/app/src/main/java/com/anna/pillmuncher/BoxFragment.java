@@ -22,7 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.anna.pillmuncher.Box;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -135,10 +135,12 @@ public class BoxFragment extends Fragment {
         //Box.MyDownloadTask frame = ;
 
         mForecastAdapter.add("hi hi");
-        //mForecastAdapter.add(Box.MyDownloadTask.result);
+        mForecastAdapter.add(Box.EXTRA_MESSAGE);
 
         listView.setAdapter(mForecastAdapter);
-
+        //BoxFragment.mForecastAdapter;
+        //String send_to_adapter = result;
+        //.clear();
 
 
 
@@ -168,4 +170,3 @@ public class BoxFragment extends Fragment {
 
 
 }
-

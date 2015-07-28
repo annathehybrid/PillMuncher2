@@ -28,7 +28,9 @@ public class Box extends AppCompatActivity {
     ImageButton imgButton;
     public TextView first_textbox;
     public TextView second_textbox;
-    public final static String EXTRA_MESSAGE = "com.anna.pillmuncher.MESSAGE";
+    public final static String EXTRA_MESSAGE = "This is an extra message!";
+    public String add_to_adapter;
+    public String see_if_this_works;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +57,15 @@ public class Box extends AppCompatActivity {
                 //startActivity(intent);
 
                 //startActivity(intent);
-                String text = "http://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=11523-7020-1";
-                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+
 
                 MyDownloadTask downloadtask = new MyDownloadTask();
                 new MyDownloadTask().execute("input_here");
+                see_if_this_works = downloadtask.see_if_this_works; //works
+                add_to_adapter = downloadtask.send_to_the_adapter;
+
+                String text = add_to_adapter;
+                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -70,9 +76,12 @@ public class Box extends AppCompatActivity {
 
 
     public class MyDownloadTask extends AsyncTask<String, Void, String> {
-        public String returnstring = null;
-        TextView output = (TextView) findViewById(R.id.textbox_1);
 
+
+
+        public String send_to_the_adapter; //gah how do I pull this from the background???
+        public String see_if_this_works = "hello I'm in the Async task"; //this works
+        TextView output = (TextView) findViewById(R.id.textbox_1);
 
 
         String parameter = "rxcui.json";
@@ -84,6 +93,7 @@ public class Box extends AppCompatActivity {
 
 
             //URL url;
+            //see_if_this_works = "hello I'm in the Async task";
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             String forecastJsonStr = null;
@@ -130,10 +140,10 @@ public class Box extends AppCompatActivity {
 
 
                 forecastJsonStr = buffer.toString();
-                returnstring = forecastJsonStr;
+
 
                 String returnthis = url.toString();
-                Log.e("ANNA, LOOK AT THIS URL", forecastJsonStr);
+                Log.e("ANNA, LOOK AT THIS URL", returnthis);
 
                 urlConnection.disconnect();
 
@@ -144,7 +154,8 @@ public class Box extends AppCompatActivity {
                 Log.e("httptest", "Error ", ex2);
             }
 
-
+            //put the Json text into a return string that was initialized earlier
+            send_to_the_adapter = forecastJsonStr;
             runOnUiThread(new Thread() {
 
                 //final String forecastJsonStr = forecastJsonStr;
@@ -153,34 +164,28 @@ public class Box extends AppCompatActivity {
 
                     TextView output = (TextView) findViewById(R.id.textbox_1);
                     //final String message = forecastJsonStr;
-                    output.setText(returnstring);
+                    output.setText(send_to_the_adapter);
                 }
             });
-
-            //return getWeatherDataFromJson(forecastJsonStr);
-
 
             return forecastJsonStr;
         }
 
 
+
         protected void onPostExecute(String result) {
-            result = returnstring;
+            //result = returnstring;
 
             if (result != null) {
-                Log.e("this is the result", result);
+                Log.e("this is the result", send_to_the_adapter);
             }
-
-
-
-            //BoxFragment.mForecastAdapter;
-            String send_to_adapter = result;
-            //.clear();
-
-
 
         }
 
+        public void SendVariablesOut(String result) {
+            send_to_the_adapter = result;
+
+        }
 
 
     }
