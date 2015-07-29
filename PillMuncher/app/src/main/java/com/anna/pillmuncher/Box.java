@@ -61,11 +61,12 @@ public class Box extends AppCompatActivity {
 
                 MyDownloadTask downloadtask = new MyDownloadTask();
                 new MyDownloadTask().execute("input_here");
-                see_if_this_works = downloadtask.see_if_this_works; //works
-                add_to_adapter = downloadtask.send_to_the_adapter;
 
-                String text = add_to_adapter;
-                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+                see_if_this_works = downloadtask.see_if_this_works; //works
+                //add_to_adapter = downloadtask.doInBackground("input_here");
+
+                add_to_adapter = downloadtask.send_to_the_adapter;
+                Toast.makeText(getApplicationContext(), add_to_adapter, Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -79,7 +80,7 @@ public class Box extends AppCompatActivity {
 
 
 
-        public String send_to_the_adapter; //gah how do I pull this from the background???
+        public String send_to_the_adapter = "whooo"; //gah how do I pull this from the background???
         public String see_if_this_works = "hello I'm in the Async task"; //this works
         TextView output = (TextView) findViewById(R.id.textbox_1);
 
@@ -88,9 +89,9 @@ public class Box extends AppCompatActivity {
         String units = "NDC";
         String units2 = "11523-7020-1";
 
-        @Override
-        protected String doInBackground(String... args) {
 
+        @Override
+        public String doInBackground(String... args) {
 
             //URL url;
             //see_if_this_works = "hello I'm in the Async task";
@@ -140,10 +141,10 @@ public class Box extends AppCompatActivity {
 
 
                 forecastJsonStr = buffer.toString();
+                send_to_the_adapter = forecastJsonStr;
 
-
-                String returnthis = url.toString();
-                Log.e("ANNA, LOOK AT THIS URL", returnthis);
+                //String returnthis = url.toString();
+                Log.e("background: ", send_to_the_adapter);
 
                 urlConnection.disconnect();
 
@@ -157,6 +158,7 @@ public class Box extends AppCompatActivity {
             //put the Json text into a return string that was initialized earlier
             send_to_the_adapter = forecastJsonStr;
             runOnUiThread(new Thread() {
+                
 
                 //final String forecastJsonStr = forecastJsonStr;
                 public void run() {
@@ -172,20 +174,19 @@ public class Box extends AppCompatActivity {
         }
 
 
-
-        protected void onPostExecute(String result) {
+        public void onPostExecute(String result) {
             //result = returnstring;
 
             if (result != null) {
                 Log.e("this is the result", send_to_the_adapter);
             }
 
+            //send_to_the_adapter = result;
+
+            //Log.e("from post execute", send_to_the_adapter);
+
         }
 
-        public void SendVariablesOut(String result) {
-            send_to_the_adapter = result;
-
-        }
 
 
     }
