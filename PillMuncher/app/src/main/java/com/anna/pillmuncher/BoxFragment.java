@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,16 +47,22 @@ import java.util.List;
 public class BoxFragment extends Fragment {
 
     public ArrayAdapter<String> mForecastAdapter;
-
+    ImageButton imgButton;
+    TextView TextBox1;
+    TextView TextBox2;
 
     public BoxFragment() {
     }
 
+    private View view;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setHasOptionsMenu(true);
+
+
+
     }
 
 
@@ -89,10 +96,6 @@ public class BoxFragment extends Fragment {
 
 
 
-
-    TextView TextBox1;
-    TextView TextBox2;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -100,6 +103,12 @@ public class BoxFragment extends Fragment {
         //}
 
         View view = inflater.inflate(R.layout.fragment_main_box, container, false);
+
+        //configureImageButton();
+        ImageButton imgButton = (ImageButton) view.findViewById(R.id.imageButton);
+
+
+
 
         TextBox1 = (TextView) view.findViewById(R.id.textbox_1);
         TextBox2 = (TextView) view.findViewById(R.id.textbox_2);
@@ -116,9 +125,6 @@ public class BoxFragment extends Fragment {
         };
 
 
-        //List<String> pill_data = new ArrayList<String>(Arrays.asList(pill_data));
-
-
 
         List<String> weekPills = new ArrayList<String>(Arrays.asList(pill_data));
 
@@ -132,23 +138,21 @@ public class BoxFragment extends Fragment {
 
         ListView listView = (ListView) view.findViewById(R.id.listview_pillbox);
 
+
+
         //Box.MyDownloadTask frame = ;
+
 
         mForecastAdapter.add("hi hi");
         mForecastAdapter.add(Box.EXTRA_MESSAGE);
-
         listView.setAdapter(mForecastAdapter);
-        //BoxFragment.mForecastAdapter;
-        //String send_to_adapter = result;
-        //.clear();
-
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String forecast = mForecastAdapter.getItem(position);
+                //String forecast = mForecastAdapter.getItem(position);
                 //Toast.makeText(getActivity(), forecast, Toast.LENGTH_SHORT).show();
 
 
@@ -166,7 +170,123 @@ public class BoxFragment extends Fragment {
         return view;
     }
 
+    private void configureImageButton() {
+
+        ImageButton imgButton = (ImageButton) view.findViewById(R.id.imageButton);
+
+        imgButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "You Clicked the button!", Toast.LENGTH_LONG).show();
+                new MyDownloadTask().execute("input_here");
+            }
+        });
 
 
+    }
+
+
+    public class MyDownloadTask extends AsyncTask<String, Void, String> {
+
+
+
+        public String send_to_the_adapter = "whooo"; //gah how do I pull this from the background???
+        public String see_if_this_works = "hello I'm in the Async task"; //this works
+
+        String parameter = "rxcui.json";
+        String units = "NDC";
+        String units2 = "11523-7020-1";
+
+
+        @Override
+        public String doInBackground(String... args) {
+
+            //URL url;
+            //see_if_this_works = "hello I'm in the Async task";
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+            String forecastJsonStr = null;
+
+            String args_print = args[0];
+            Log.e("This is the input: ", args_print);
+
+
+            try {
+                // Construct the URL
+                final String RXNORM_BASE_URL = "http://rxnav.nlm.nih.gov/REST/";
+                //URL url = new URL("http://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=11523-7020-1");
+
+                //final String QUERY_PARAM = "mouse";
+                final String UNITS_PARAM = "idtype";
+                final String UNITS_PARAM2 = "id";
+
+                Uri builtUri = Uri.parse(RXNORM_BASE_URL).buildUpon()
+                        .appendPath(parameter)
+                        .appendQueryParameter(UNITS_PARAM, units) //adds a ?PARAM=units and fragment adds a #
+                        .appendQueryParameter(UNITS_PARAM2, units2)
+                        .build();
+
+                URL url = new URL(builtUri.toString());
+
+                //HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+
+                forecastJsonStr = buffer.toString();
+                send_to_the_adapter = forecastJsonStr;
+
+                //String returnthis = url.toString();
+                Log.e("background: ", send_to_the_adapter);
+
+                urlConnection.disconnect();
+
+
+            } catch (MalformedURLException ex) {
+                Log.e("httptest", Log.getStackTraceString(ex));
+            } catch (IOException ex2) {
+                Log.e("httptest", "Error ", ex2);
+            }
+
+            //put the Json text into a return string that was initialized earlier
+            send_to_the_adapter = forecastJsonStr;
+
+
+            return forecastJsonStr;
+        }
+
+
+        public void onPostExecute(String result) {
+            //result = returnstring;
+
+            if (result != null) {
+                Log.e("this is the result", send_to_the_adapter);
+            }
+
+            //send_to_the_adapter = result;
+
+            //Log.e("from post execute", send_to_the_adapter);
+
+        }
+
+
+
+    }
 
 }
